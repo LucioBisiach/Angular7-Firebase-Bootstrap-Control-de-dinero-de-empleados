@@ -1,0 +1,19 @@
+
+<section id="profile" class="container">
+  <div class="row mt-5">
+    <div class="offset-lg-4 col-lg-4 col-sm-6 col-12 main-section text-center card border-info">
+      <br>
+      <div class="row user-details">
+        <div class="col-12">
+          <img src="{{user.photoUrl}}" class="rounded-circle img-thumbnail" alt="profile">
+          <h5 *ngIf="providerId != 'password'">{{user.name}}</h5>
+          <p>
+            {{user.email}}
+          </p>
+          <hr>
+          <!-- <span>Datos.</span> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

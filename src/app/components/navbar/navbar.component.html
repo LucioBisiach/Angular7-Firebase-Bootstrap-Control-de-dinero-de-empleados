@@ -1,0 +1,56 @@
+<!-- <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-info">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNavbar" aria-controls="mainNavbar"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="mainNavbar">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" *ngIf="!isLogged">
+        <a class="nav-link" routerLink="/user/register"><b>Registro</b>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="isLogged">
+        <a class="nav-link" routerLink="/user/profile"><b>Usuario</b></a>
+      </li>
+      <li class="nav-item" *ngIf="isLogged">
+        <a class="nav-link" routerLink="/admin/list-gastos"><b>Gastos</b></a>
+      </li>
+      <li class="nav-item" *ngIf="!isLogged">
+        <a class="nav-link" routerLink="/user/login"><b>Iniciar Sesión</b>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="isLogged">
+        <a href="#" class="nav-link" (click)="onLogout()"><b>Cerrar Sesión</b>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav> -->
+
+<nav class="navbar navbar-dark py-0 bg-primary navbar-expand-lg py-md-0">
+  <a class="navbar-brand"></a>
+  <button class="navbar-toggler mt-1" type="button" data-toggle="collapse" data-target="#navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>
+  </button>
+  <div class="navbar-collapse collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item" *ngIf="!isLogged">
+        <a class="nav-link text-white" routerLink="/user/register"><b>Registro</b>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="isLogged">
+        <a class="nav-link text-white" routerLink="/admin/list-gastos"><b>Gastos</b></a>
+      </li>
+      <li class="nav-item" *ngIf="!isLogged">
+        <a class="nav-link text-white" routerLink="/user/login"><b>Iniciar Sesión</b>
+        </a>
+      </li>
+      <li class="nav-item py-0" *ngIf="isLogged">
+        <a href="#" class="nav-link text-white" (click)="onLogout()"><b>Cerrar Sesión</b>
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>

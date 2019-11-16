@@ -1,0 +1,336 @@
+<section class="row mt-5">
+  <div class="col">
+
+    <!-- BOTONES USUARIOS NORMALES -->
+    <div class="row" *ngIf="isAdmin == false">
+      <div class="col-sm-4" [hidden]="show_btn_Aprobados == true">
+        <div class="card text-white bg-success mb-4">
+          <button type="button" class="btn btn-success btn-lg btn-block" (click)="getGastosAprobados()">Saldo:
+            {{suma_gastosAprobados_porUsuario}}</button>
+        </div>
+      </div>
+
+      <div class="col-sm-4" [hidden]="show_btn_AControlar == true">
+        <div class="card text-white bg-warning mb-4">
+          <button type="button" class="btn btn-warning btn-lg btn-block text-white" (click)="getGastosAControlar()">A
+            controlar: {{suma_gastosAControlar_porUsuario}}</button>
+        </div>
+      </div>
+
+      <div class="col-sm-4" [hidden]="show_btn_Rechazados == true">
+        <div class="card text-white bg-danger mb-4">
+          <button type="button" class="btn btn-danger btn-lg btn-block" (click)="getGastosRechazados()">Rechazados
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA DE USUARIOS (ADMIN) -->
+    <div class="row" *ngIf="isAdmin == true" [hidden]="show_lst_all_User == true">
+      <div class="table-responsive thead-light">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Email</th>
+              <th scope="col">Aprobados</th>
+              <th scope="col">A controlar</th>
+              <th scope="col">Rechazados</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td (click)="getIdModalAddGasto(user)" data-toggle="modal" data-target="#modalGastoAdmin">{{user.email}}
+              </td>
+              <td (click)="onSelectGastoAprobadoForUser(user)">{{user.gastosAprobados}}</td>
+              <td (click)="onSelectGastoAControlarForUser(user)">{{user.gastosAControlar}}</td>
+              <td (click)="onSelectGastoRechazadoForUser(user)">{{user.gastosRechazados}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br class="row" *ngIf="isAdmin == true">
+
+
+    <!-- MOSTRAR USUARIO Y ESTADO DE LA LSITA SELECCIONADA -->
+
+    <table class="table" *ngIf="isAdmin == true">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col"><b>Usuario Seleccionado: </b>{{select_email}}</th>
+          <th scope="col"><b>Estado: </b>{{estado}}</th>
+          <th scope="col"><button [hidden]="button_volver == true" type="button" class="btn btn-primary btn-sm"
+              (click)="buttonVolver()">Volver</button></th>
+        </tr>
+      </thead>
+    </table>
+    <br *ngIf="isAdmin == true">
+
+
+    <!-- BOTON AGREGAR GASTO, USUARIO NORMAL -->
+    <div class="row" *ngIf="isAdmin == false">
+      <div class="col-sm-12" [hidden]="button_volver_user == true">
+        <button class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#modalGasto">Agregar
+          Gasto</button>
+      </div>
+      <div class="col-sm-12" [hidden]="button_volver_user == false">
+        <button class="btn btn-primary btn-lg btn-block" (click)="buttonVolverUser()">Volver</button>
+      </div>
+    </div>
+    <br *ngIf="isAdmin == false">
+
+    <!-- Todos los gastos por usuario filtrados (VISTA ADMIN)-->
+    <div class="row" *ngIf="isAdmin == true" [hidden]="show_lst_gastos_all_UserAprobados == false">
+      <div class="table-responsive" id="tableAdmin">
+        <pagination-controls id="paginationGastosAprobadosAdmin" (pageChange)="p = $event"></pagination-controls>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let gasto of (tabla_por_empleado_y_estado_Aprobados | paginate: { itemsPerPage:8, currentPage: p, id:'paginationGastosAprobadosAdmin'} )">
+              <td>{{gasto.fecha}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.categoria}}</td>
+              <td>{{gasto.descripcion}}</td>
+              <td>{{gasto.precio}}</td>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-warning" (click)="getGastoAControlar(gasto)"><i
+                    class="fa fa-cogs text-white"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="isAdmin == true" [hidden]="show_lst_gastos_all_UserAControlar == false">
+      <div class="table-responsive" id="tableAdmin">
+        <pagination-controls id="paginationGastosAControlarAdmin" (pageChange)="p = $event"></pagination-controls>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col">&nbsp;</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let gasto of (tabla_por_empleado_y_estado_AControlar | paginate: { itemsPerPage:8, currentPage: p, id:'paginationGastosAControlarAdmin'} )">
+              <td>{{gasto.fecha}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.categoria}}</td>
+              <td>{{gasto.descripcion}}</td>
+              <td>{{gasto.precio}}</td>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-success" (click)="getGastoAprobado(gasto)"><i
+                    class="fa fa-thumbs-up"></i></button>
+              </td>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-danger" (click)="getGastoRechazado(gasto)"><i
+                    class="fa fa-thumbs-down"></i></button>
+              </td>
+              <td *ngIf="isAdmin == true; else noOwner">
+                <button class="btn btn-info" data-toggle="modal" data-target="#modalGasto"
+                  (click)="onPreUpdateGasto(gasto)"><i class="fa fa-edit text-white"></i></button>
+              </td>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-danger" (click)="onDeleteGasto(gasto.id)"><i class="fa fa-trash"></i></button>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="isAdmin == true" [hidden]="show_lst_gastos_all_UserRechazados == false">
+      <div class="table-responsive" id="tableAdmin">
+        <pagination-controls id="paginationGastosRechazadosAdmin" (pageChange)="p = $event"></pagination-controls>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let gasto of (tabla_por_empleado_y_estado_Rechazados | paginate: { itemsPerPage:8, currentPage: p, id:'paginationGastosRechazadosAdmin'} )">
+              <td>{{gasto.fecha}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.categoria}}</td>
+              <td>{{gasto.descripcion}}</td>
+              <td>{{gasto.precio}}</td>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-warning" (click)="getGastoAControlar(gasto)"><i
+                    class="fa fa-cogs text-white"></i></button>
+              </td>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-danger" (click)="onDeleteGasto(gasto.id)"><i class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Gastos Aprobados por usuario Logueado -->
+    <div class="row" [hidden]="show_lst_gastosCurrentUserAprobados == false">
+      <div class="table-responsive">
+        <pagination-controls id="paginationGastosAprobadosUser" (pageChange)="p = $event"></pagination-controls>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col" *ngIf="isAdmin == true">Categoria</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col" *ngIf="isAdmin == true">Estado</th>
+              <th scope="col" *ngIf="isAdmin == true">&nbsp; Hola</th>
+              <th scope="col" *ngIf="isAdmin == true">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let gasto of (lst_gastosCurrentUserAprobados | paginate: { itemsPerPage:8, currentPage: p, id:'paginationGastosAprobadosUser'} )">
+              <td>{{gasto.fecha}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.categoria}}</td>
+              <td>{{gasto.descripcion}}</td>
+              <td>{{gasto.precio}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.estado}}</td>
+              <td *ngIf="isAdmin == true; else noOwner">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modalGasto"
+                  (click)="onPreUpdateGasto(gasto)">Editar</button>
+              </td>
+              <ng-template *ngIf="isAdmin == true" #noOwner>
+                <td>
+                  <button class="btn btn-secondary" disabled="true">Editar</button>
+                </td>
+              </ng-template>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-danger" (click)="onDeleteGasto(gasto.id)">Eliminar</button>
+              </td>
+              <ng-template *ngIf="isAdmin == true" #noAdmin>
+                <td>
+                  <button class="btn btn-danger" disabled="true">Eliminar</button>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Gastos A controlar por usuario Logueado -->
+    <div class="row" [hidden]="show_lst_gastosCurrentUserAControlar == false">
+      <div class="table-responsive">
+        <pagination-controls id="paginationGastosAControlarUser" (pageChange)="p = $event"></pagination-controls>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col" *ngIf="isAdmin == true">Categoria</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col" *ngIf="isAdmin == true">Estado</th>
+              <th scope="col" *ngIf="isAdmin == true">&nbsp;</th>
+              <th scope="col" *ngIf="isAdmin == true">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let gasto of (lst_gastosCurrentUserAControlar | paginate: { itemsPerPage:8, currentPage: p, id:'paginationGastosAControlarUser'} )">
+              <td>{{gasto.fecha}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.categoria}}</td>
+              <td>{{gasto.descripcion}}</td>
+              <td>{{gasto.precio}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.estado}}</td>
+              <td *ngIf="isAdmin == true; else noOwner">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modalGasto"
+                  (click)="onPreUpdateGasto(gasto)">Editar</button>
+              </td>
+              <ng-template *ngIf="isAdmin == true" #noOwner>
+                <td>
+                  <button class="btn btn-secondary" disabled="true">Editar</button>
+                </td>
+              </ng-template>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-danger" (click)="onDeleteGasto(gasto.id)">Eliminar</button>
+              </td>
+              <ng-template *ngIf="isAdmin == true" #noAdmin>
+                <td>
+                  <button class="btn btn-danger" disabled="true">Eliminar</button>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Gastos Rechazados por usuario Logueado -->
+    <div class="row" [hidden]="show_lst_gastosCurrentUserRechazados == false">
+      <div class="table-responsive">
+        <pagination-controls id="paginationGastosRechazadosUser" (pageChange)="p = $event"></pagination-controls>
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col" *ngIf="isAdmin == true">Categoria</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Precio</th>
+              <th scope="col" *ngIf="isAdmin == true">Estado</th>
+              <th scope="col" *ngIf="isAdmin == true">&nbsp;</th>
+              <th scope="col" *ngIf="isAdmin == true">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let gasto of (lst_gastosCurrentUserRechazados | paginate: { itemsPerPage:8, currentPage: p, id:'paginationGastosRechazadosUser'} )">
+              <td>{{gasto.fecha}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.categoria}}</td>
+              <td>{{gasto.descripcion}}</td>
+              <td>{{gasto.precio}}</td>
+              <td *ngIf="isAdmin == true">{{gasto.estado}}</td>
+              <td *ngIf="isAdmin == true; else noOwner">
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modalGasto"
+                  (click)="onPreUpdateGasto(gasto)">Editar</button>
+              </td>
+              <ng-template *ngIf="isAdmin == true" #noOwner>
+                <td>
+                  <button class="btn btn-secondary" disabled="true">Editar</button>
+                </td>
+              </ng-template>
+              <td *ngIf="isAdmin == true; else noAdmin">
+                <button class="btn btn-danger" (click)="onDeleteGasto(gasto.id)">Eliminar</button>
+              </td>
+              <ng-template *ngIf="isAdmin == true" #noAdmin>
+                <td>
+                  <button class="btn btn-danger" disabled="true">Eliminar</button>
+                </td>
+              </ng-template>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<app-modal [userUid]="userUid"></app-modal>

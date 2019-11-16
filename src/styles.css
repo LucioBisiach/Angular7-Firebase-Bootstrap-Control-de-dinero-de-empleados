@@ -1,0 +1,46 @@
+/* You can add global styles to this file, and also import other style files */
+#gastos {
+  border-radius: 0.25rem;
+  background: #f9f9f9 !important;
+}
+section {
+  padding: 20px 0;
+}
+#gastos .card {
+  border: none;
+  background: #fff;
+}
+.card_gasto {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 30px;
+}
+
+.card_gasto .card {
+  min-height: 312px;
+}
+
+p.card-text,
+h4.card-title {
+  min-height: 96px !important;
+}
+
+.card-title {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.card_gasto .card .card-body img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+div.container-precio-idioma{
+  display: flex;
+  justify-content: space-between;
+}
+
+
+
+
